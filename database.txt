@@ -1,0 +1,188 @@
+connect to database: mysql -h localhost -u root
+
+creation of database: CREATE DATABASE databasename;
+		   CREATE DATABASE ss91db;
+
+This means database is created successfully: Query OK, 1 row affected (0.007 sec)
+
+check database is created or not: SHOW DATABASES;
+
+select database: USE ss91db;
+
+To create tables we need 2 things:
+1.Datatypes:
+	a.numeric(numbers):
+		1.int(tinyint(1byte), smallint(2bytes), mediumint(4bytes), int(8bytes), bigint(16bytes))
+		2.decimalvalues(float(4 bytes), double(8bytes), decimal(maxium_digits, decimal_places))
+
+	b.character:
+		1.char(max_len) - Ritu****** ->use all mentioned char length
+		2.varchar(max_len) - Ritu* ->use +1 of char length mentioned
+		3.text(used to write big paragraphs)
+	
+	c.datetime: date= yyyy-mm-dd
+		   time= hh:mm:ss
+		   datetime= yyyy-mm-dd hh:mm:ss
+	
+	d.binary: to store image file that will stored in bytes
+	               binary value:True or False
+	               blob: stores either text or files
+	
+	e.ENUM:Single choice content
+
+	f.SET:Multiple choice content
+
+2.Constraints:primary key
+	       foreign key
+	       unique
+                       not null(null=nothing)
+                       default
+
+
+*Create table i.e. SQL script*
+*CREATE TABLE tablename(
+columnname datatype constraint,
+...,
+...,
+constraint constraintkeyword(columnname) 
+);*
+
+*Column level- Primary key, Not Null, Unique, Default
+Table Level- Primary key and Foreign key*
+
+Syntax:
+CREATE TABLE product(
+pID int primary key auto_increment,
+Name varchar(100) not null,
+Price decimal(10,2)  default 10.0,
+Description text,
+MFG date,
+Quantity int
+);
+
+*3 ways to see table and columns in tables:
+1.SHOW TABLES;
+2.DESC/DESCRIBE tablename;
+3.SHOW CREATE TABLE tablename;-------this gives SQL script i.e. the code we written while creating tables*
+
+*Database object:
+1.table
+2.sequence(this is generated when we write auto_increment): startpoint: 1
+	     endpoint: no. of bytes-8
+	     incrementpoint:1
+	     currentposition:1
+3.Index: SHOW INDEX FROM tablename;
+	SHOW INDEX FROM customer;
+
+              DROP INDEX indexname ON tablename;
+	DROP INDEX customer_person_pk ON customer;
+
+
+*
+
+CREATE TABLE customer(
+cID int primary key auto_increment,
+Name  varchar(50) not null,
+Email varchar(50) unique,
+MobileNo int
+);
+
+CREATE TABLE sales(
+billno int,
+prodid int,
+custid int,
+qty int,
+billdate date,
+CONSTRAINT primary key(billno, prodid),
+CONSTRAINT foreign key(prodid) REFERENCES product(pID),
+CONSTRAINT foreign key(custid) REFERENCES customer(cID)
+);
+
+CREATE TABLE person(
+id int primary key,
+name varchar(100),
+Gender enum('M', 'F', 'T'),
+Hobbies set('Singing', 'Dancing', 'Cricket', 'Music')
+);
+
+*Create a table department and employee and create a relationship between the two tables*
+
+create table department(
+Dcode int primary key auto_increment,
+Dname varchar(100) not null,
+Dmanager varchar(100)
+);
+
+create table employee(
+Eid int primary key,
+Ename varchar(100),
+DOB date,
+EDcode int,
+constraint foreign key(EDcode) references department(Dcode)
+);
+
+*ALTER command*
+Syntax: ALTER TABLE tablename;
+1. Add column
+Syntax: ALTER TABLE tablename ADD  COLUMN colname datatype constraint;
+ALTER TABLE person ADD COLUMN email varchar(100) unique not null;
+
+2.add a column after a particular column
+Syntax: ALTER TABLE tablename ADD COLUMN colname datatype constraint AFTER colname;
+ALTER TABLE person ADD COLUMN mobile bigint unique AFTER name;
+
+3.change a column(datatype, constraint, renamecolumn)
+Syntax: ALTER TABLE tablename CHANGE oldcolname newcolname datatype constraint;
+ALTER TABLE customer CHANGE MobileNo contact bigint unique not null;
+
+4.add constraint
+Syntax: ALTER TABLE tablename  ADD CONSTRAINT constraintname constraintkeyword(columnname) REFERENCES tablename(columnname);
+ALTER TABLE customer ADD COLUMN pid int;----- Added a column
+
+ALTER TABLE customer ADD CONSTRAINT customer_person_fk foreign key(pid) references person(id);
+
+5.Remove a column
+Syntax:ALTER TABLE tablename DROP COLUMN colname;
+ALTER TABLE customer DROP COLUMN pid;
+
+6.Remove constraint
+Syntax:ALTER TABLE tablename DROP constraintkeyword constraintname;
+ALTER TABLE customer DROP foreign key customer_person_fk;
+
+7.Rename Tablename
+Syntax:ALTER TABLE tablename RENAME TO newtablename;
+ALTER TABLE customer RENAME TO cust;
+
+
+8. Delete a table 
+drop table (table name);
+
+# drop table person;
+
+
+
+
+
+#__________________________________________________________________________________ 14-12-2019
+
+dATA manipulation language 
+Insert 
+
+Inserting in one column
+
+# syntax
+
+insert into product (name) values ('Maggi');
+
+
+# insert into column 
+insert into tablename values (values list)
+# note the same format must be written
+
+
+# syntax
+insert into product values (40, 'gel pen', 12, 'link gel pen', '2019-09-12',1000);
+
+
+3 insert multiple records 
+
